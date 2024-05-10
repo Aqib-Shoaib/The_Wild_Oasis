@@ -6,8 +6,7 @@ const Heading = styled.h1`
     css`
       font-size: 3rem;
       font-weight: 600;
-      background-color: var(--color-red-700);
-    `}
+      `}
   ${(props) =>
     props.as === "h2" &&
     css`
