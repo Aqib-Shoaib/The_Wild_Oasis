@@ -38,7 +38,7 @@ const FormRow2 = styled.div`
   }
 `;
 
-function CreateCabinForm({ cabinToEdit }) {
+function CreateCabinForm({ cabinToEdit, onCloseModal }) {
   const { id: editId, ...editValue } = cabinToEdit || { id: 0 };
   const isEditSession = Boolean(editId);
   //----------gettting value from form using custom hook provided by react-hook-form library
@@ -52,13 +52,22 @@ function CreateCabinForm({ cabinToEdit }) {
   function onSubmit(data) {
     const image = typeof data.image === "string" ? data.image : data.image[0];
     if (isEditSession)
-      cabinEditing({ newCabinData: { ...data, image: image }, id: editId });
+      cabinEditing(
+        { newCabinData: { ...data, image: image }, id: editId },
+        {
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+          },
+        }
+      );
     else
       cabinCreater(
         { ...data, image: image },
         {
           onSuccess: () => {
             reset();
+            onCloseModal?.();
           },
         }
       );
@@ -67,7 +76,10 @@ function CreateCabinForm({ cabinToEdit }) {
   const isWorking = isEditing || isAdding;
   //JSX
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit)}
+      type={onCloseModal ? "Modal" : "regular"}
+    >
       <FormRow label="Cabin Name" error={errors?.name?.message}>
         <Input
           type="text"
@@ -144,7 +156,11 @@ function CreateCabinForm({ cabinToEdit }) {
 
       <FormRow2>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button
+          variation="secondary"
+          type="reset"
+          onClick={() => onCloseModal?.()}
+        >
           Cancel
         </Button>
         <Button disabled={isWorking}>Edit/Add cabin</Button>
