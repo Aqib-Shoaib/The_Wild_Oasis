@@ -2,6 +2,7 @@
 import { HiArrowLeft, HiArrowRight } from "react-icons/hi";
 import styled from "styled-components";
 import { useSearchParams } from "react-router-dom";
+import { PAGE_SIZE } from "../utils/constants";
 
 const StyledPagination = styled.div`
   width: 100%;
@@ -58,8 +59,6 @@ const PaginationButton = styled.button`
     color: var(--color-brand-50);
   }
 `;
-
-const PAGE_SIZE = 10;
 
 function Pagination({ count }) {
   const pageCount = Math.ceil(count / PAGE_SIZE);
