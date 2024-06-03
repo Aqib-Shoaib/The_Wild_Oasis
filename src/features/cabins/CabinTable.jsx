@@ -29,9 +29,10 @@ function CabinTable() {
   });
 
   const [searchParams] = useSearchParams();
+  if (isLoading) return <Spinner />;
 
   let filterValue = searchParams.get("discount") || "all";
-  let sortBy = searchParams.get("sortBy") || "startDate-asc";
+  let sortBy = searchParams.get("sortBy") || "name-asc";
   let filteredCabins = null;
   //conditionally filtering data
   if (filterValue === "all") filteredCabins = data;
@@ -46,7 +47,6 @@ function CabinTable() {
     (a, b) => (a[field] - b[field]) * modifier
   );
 
-  if (isLoading) return <Spinner />;
   return (
     <Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
       <Table.Header>

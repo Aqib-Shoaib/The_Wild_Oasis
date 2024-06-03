@@ -8,9 +8,13 @@ import Table from "../../ui/Table";
 import Button from "../../ui/Button";
 import { formatCurrency } from "../../utils/helpers";
 import { formatDistanceFromNow } from "../../utils/helpers";
-import { HiEye } from "react-icons/hi";
+import { HiEye, HiTrash } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
-import { HiArrowDownOnSquare } from "react-icons/hi2";
+import { HiArrowDownOnSquare, HiArrowUpOnSquare } from "react-icons/hi2";
+import useCheckout from "../check-in-out/useCheckout";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import useDeleteBooking from "./useDeleteBooking";
+import Modal from "../../ui/Modal";
 
 const Cabin = styled.div`
   font-size: 1.6rem;
@@ -54,6 +58,8 @@ function BookingRow({
   },
 }) {
   const navigate = useNavigate();
+  const { isLoading: isCheckingOut, mutate: checkOut } = useCheckout();
+  const { isLoading: isDeleting, mutate: deleteBooking } = useDeleteBooking();
   const statusToTagName = {
     unconfirmed: "blue",
     "checked-in": "green",
@@ -95,6 +101,16 @@ function BookingRow({
             <HiArrowDownOnSquare />
           </Button>
         )}
+        {status === "checked-in" && (
+          <Button
+            variation="secondary"
+            sizes="small"
+            onClick={() => checkOut(bookingId)}
+            disabled={isCheckingOut}
+          >
+            <HiArrowUpOnSquare />
+          </Button>
+        )}
         <Button
           variation="secondary"
           sizes="small"
@@ -102,6 +118,21 @@ function BookingRow({
         >
           <HiEye />
         </Button>
+        <Modal>
+          <Modal.Open opens="deleteBooking">
+            <Button variation="danger" sizes="small">
+              <HiTrash />
+            </Button>
+          </Modal.Open>
+
+          <Modal.Window name="deleteBooking">
+            <ConfirmDelete
+              resourceName="Booking"
+              onConfirm={() => deleteBooking(bookingId)}
+              disabled={isDeleting}
+            />
+          </Modal.Window>
+        </Modal>
       </div>
     </Table.Row>
   );

@@ -1,25 +1,20 @@
-/* eslint-disable no-unused-vars */
-import { useQuery } from "@tanstack/react-query";
 import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
 import Spinner from "../../ui/Spinner";
-import { getSettings } from "../../services/apiSettings";
 import { useUpdateSettings } from "./useUpdateSettings";
+import useSettings from "./useSettings";
 
 function UpdateSettingsForm() {
-  const { isLoading: isRetrieving, data: settings } = useQuery({
-    queryKey: ["settings"],
-    queryFn: getSettings,
-  });
+  const { isRetrieving, settings } = useSettings();
   const { updateSettings, isLoading } = useUpdateSettings();
-  if (isRetrieving) return <Spinner />;
   const {
     breakfastPrice,
     maxBookingLength,
     maxGuestsPerBooking,
     minBookingLength,
   } = settings;
+  if (isRetrieving) return <Spinner />;
   function settingsUpdate(e, field) {
     const { value } = e.target;
     if (!value) return;
