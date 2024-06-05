@@ -16,10 +16,12 @@ function ProtectedRoute({ children }) {
   const navigate = useNavigate();
   //getting the user data if it exists
   const { isLoading, isAuthenticated } = useUser();
-
   useEffect(
     function () {
-      if (!isAuthenticated && !isLoading) navigate("/login");
+      if (!isAuthenticated && !isLoading) {
+        console.log("ah shit!");
+        navigate("/login");
+      }
     },
     [isAuthenticated, isLoading, navigate]
   );

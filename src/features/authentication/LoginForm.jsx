@@ -4,6 +4,7 @@ import Form from "../../ui/Form";
 import Input from "../../ui/Input";
 import styled from "styled-components";
 import useLogin from "./useLogin";
+import SpinnerMini from "../../ui/SpinnerMini";
 
 const Label = styled.label`
   margin: 7px;
@@ -59,7 +60,7 @@ function LoginForm() {
         }}
       >
         <Button size="large" disabled={isLogingIn}>
-          Login
+          {isLogingIn ? <SpinnerMini /> : "Login"}
         </Button>
       </div>
     </Form>

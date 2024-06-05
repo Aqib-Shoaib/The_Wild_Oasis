@@ -16,11 +16,29 @@ export async function getCurrentUser() {
 
   if (!session.session) return null;
 
-  const { data, error } = await supabase.auth.getUser();
+  const { data: user, error } = await supabase.auth.getUser();
 
   if (error) {
     console.log(error);
     throw new Error("Error While fetching user data!");
   }
+  return user.user;
+}
+export async function signOut() {
+  const { error } = await supabase.auth.signOut();
+  if (error) throw new Error("Error in Signing Out!");
+}
+export async function signup({ fullName, email, password }) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        fullName,
+        avatar: "",
+      },
+    },
+  });
+  if (error) throw new Error("error in adding a new user!");
   return data;
 }

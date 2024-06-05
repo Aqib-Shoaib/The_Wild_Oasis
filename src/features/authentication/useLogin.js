@@ -8,9 +8,10 @@ function useLogin() {
   const navigate = useNavigate();
   const { isLoading, mutate } = useMutation({
     mutationFn: ({ email, password }) => login({ email, password }),
-    onSuccess: () => {
+    onSuccess: (user) => {
       toast.success("Login Succesful!");
-      queryCl.invalidateQueries({ active: true });
+      // queryCl.invalidateQueries({ active: true });
+      queryCl.setQueryData(["user"], user.user);
       navigate("/");
     },
     onError: () => {
