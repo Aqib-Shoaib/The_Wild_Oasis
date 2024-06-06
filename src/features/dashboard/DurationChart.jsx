@@ -1,4 +1,7 @@
+/* eslint-disable react/prop-types */
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from "recharts";
 import styled from "styled-components";
+import { useDarkMode } from "../../contexts/DarkMode";
 
 const ChartBox = styled.div`
   /* Box */
@@ -130,3 +133,45 @@ function prepareData(startData, stays) {
 
   return data;
 }
+function DurationChart({ confirmedStays }) {
+  const { isDarkMode } = useDarkMode();
+  const startData = isDarkMode ? startDataDark : startDataLight;
+  const data = prepareData(startData, confirmedStays);
+  return (
+    <ChartBox>
+      <span>Stay Duration Summary</span>
+      <ResponsiveContainer>
+        <PieChart>
+          <Legend
+            verticalAlign="middle"
+            align="right"
+            width="30%"
+            layout="vertical"
+            iconSize={15}
+            iconType="circle"
+          />
+          <Pie
+            data={data}
+            nameKey="duration"
+            dataKey="value"
+            innerRadius={75}
+            outerRadius={100}
+            cx="40%"
+            cy="50%"
+            paddingAngle={3}
+          >
+            {data.map((entry) => (
+              <Cell
+                fill={entry.color}
+                stroke={entry.stroke}
+                key={entry.duration}
+              />
+            ))}
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
+    </ChartBox>
+  );
+}
+
+export default DurationChart;
