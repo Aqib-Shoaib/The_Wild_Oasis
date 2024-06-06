@@ -1,17 +1,24 @@
 import { useState } from "react";
 
 import Button from "../../ui/Button";
-import FileInput from "../../ui/FileInput";
 import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
 
-import { useUser } from "./useUser";
-
+import useUser from "./useUser";
+import styled from "styled-components";
+import useUpdatedUser from "./useUpdatedUser";
+const Div = styled.div`
+  display: flex;
+  align-items: flex-end;
+  flex-direction: row;
+  justify-content: end;
+  gap: 5px;
+`;
 function UpdateUserDataForm() {
   // We don't need the loading state, and can immediately use the user data, because we know that it has already been loaded at this point
   const {
-    user: {
+    data: {
       email,
       user_metadata: { fullName: currentFullName },
     },
@@ -19,9 +26,11 @@ function UpdateUserDataForm() {
 
   const [fullName, setFullName] = useState(currentFullName);
   const [avatar, setAvatar] = useState(null);
-
+  const { updateUser, isUpdating } = useUpdatedUser();
   function handleSubmit(e) {
     e.preventDefault();
+    if (!fullName) return;
+    updateUser({ fullName, avatar });
   }
 
   return (
@@ -33,23 +42,26 @@ function UpdateUserDataForm() {
         <Input
           type="text"
           value={fullName}
+          disabled={isUpdating}
           onChange={(e) => setFullName(e.target.value)}
           id="fullName"
         />
       </FormRow>
       <FormRow label="Avatar image">
-        <FileInput
-          id="avatar"
-          accept="image/*"
+        <Input
+          type="file"
           onChange={(e) => setAvatar(e.target.files[0])}
+          accept="image/*"
+          id="avatar"
+          disabled={isUpdating}
         />
       </FormRow>
-      <FormRow>
-        <Button type="reset" variation="secondary">
+      <Div>
+        <Button type="reset" variation="secondary" disabled={isUpdating}>
           Cancel
         </Button>
-        <Button>Update account</Button>
-      </FormRow>
+        <Button disabled={isUpdating}>Update account</Button>
+      </Div>
     </Form>
   );
 }

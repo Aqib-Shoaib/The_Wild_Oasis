@@ -4,13 +4,20 @@ import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
 
-import { useUpdateUser } from "./useUpdateUser";
-
+import useUpdatedUser from "./useUpdatedUser";
+import styled from "styled-components";
+const Div = styled.div`
+  display: flex;
+  align-items: flex-end;
+  flex-direction: row;
+  justify-content: end;
+  gap: 5px;
+`;
 function UpdatePasswordForm() {
   const { register, handleSubmit, formState, getValues, reset } = useForm();
   const { errors } = formState;
 
-  const { updateUser, isUpdating } = useUpdateUser();
+  const { updateUser, isUpdating } = useUpdatedUser();
 
   function onSubmit({ password }) {
     updateUser({ password }, { onSuccess: reset });
@@ -53,12 +60,12 @@ function UpdatePasswordForm() {
           })}
         />
       </FormRow>
-      <FormRow>
+      <Div>
         <Button onClick={reset} type="reset" variation="secondary">
           Cancel
         </Button>
         <Button disabled={isUpdating}>Update password</Button>
-      </FormRow>
+      </Div>
     </Form>
   );
 }
